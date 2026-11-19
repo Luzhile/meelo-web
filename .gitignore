@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.vercel/
+.npm-cache/
+*.log
+*.zip
+__pycache__/
+assets/blender/*.blend1
+runtime/

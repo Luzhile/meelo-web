@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEELO 学习房 Lightmap 验证</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e7e7e7;color:#343039;font:14px system-ui,sans-serif}header{padding:14px 20px;background:#fffaf1;border-bottom:1px solid #d5d0c6;display:flex;gap:12px;align-items:center;flex-wrap:wrap}h1{font-size:17px;margin:0 14px 0 0}button{border:1px solid #a99b86;border-radius:6px;padding:8px 12px;background:white;color:#343039;cursor:pointer}button[aria-pressed=true]{background:#343039;color:white}main{max-width:1100px;margin:16px auto;padding:0 16px}#viewport{width:100%;aspect-ratio:3/2;background:#e7e7e7}canvas{width:100%;height:100%;display:block}#status{white-space:pre-wrap;font:12px/1.6 ui-monospace,monospace;padding:12px;background:#fffaf1;border:1px solid #ddd4c6;border-radius:8px}p{line-height:1.6}nav{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0}a{color:#755335}label{display:flex;gap:6px;align-items:center}
+</style>
+<script type="importmap">{"imports":{"three":"../vendor/package/build/three.module.js","three/addons/":"../vendor/package/examples/jsm/"}}</script></head>
+<body><header><h1>学习房 · Lightmap 独立验证</h1><button data-mode="baked" aria-pressed="true">烘焙光照</button><button data-mode="realtime" aria-pressed="false">实时 PBR 对照</button><label><input id="dynamic" type="checkbox">显示小猫与可动物件</label><button id="reset">参考机位</button></header>
+<main><div id="viewport"></div><p>原项目未替换。默认隐藏动态物件，与 Blender 对比图保持一致；勾选后可点击带交互名称的物件进行拾取验证。</p>
+<nav><a href="renders/study-reference.png" target="_blank">Blender 同机位参考</a><a href="renders/study-baked-reconstruction.png" target="_blank">Blender 烘焙重建</a><a href="renders/study-uv-atlas.png" target="_blank">UV 图集</a><a href="renders/study-lightmap-preview.png" target="_blank">Lightmap 预览</a><a href="renders/study-difference-x4.png" target="_blank">误差 ×4</a><a href="assets/manifest.json" target="_blank">加载参数</a></nav>
+<div id="status">加载中…</div></main>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+const host=document.querySelector('#viewport'),status=document.querySelector('#status');
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.AgXToneMapping;renderer.toneMappingExposure=2**(-.05);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+host.appendChild(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#e7e7e7');
+const camera=new THREE.OrthographicCamera(-4.75,4.75,9.5/3,-9.5/3,.05,100);
+camera.layers.enable(1);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=false;
+let mode='baked',manifest,root,lightmap;const staticMeshes=[],dynamicMeshes=[],lights=[],errors=[],aliases=[];
+let picks=0,lastPick=null;
+const report={ready:false,errors,staticCount:0,dynamicCount:0,uvErrors:[],bindings:[],interactionAliases:aliases};
+window.__lightmapValidation=report;
+const toWeb=a=>new THREE.Vector3(a[0],a[2],-a[1]);
+function reset(){camera.position.fromArray(manifest.camera.position_web);controls.target.fromArray(manifest.camera.target_web);camera.lookAt(controls.target);controls.update();}
+function resize(){const width=Math.round(host.clientWidth);renderer.setSize(width,Math.round(width/1.5),false);camera.updateProjectionMatrix();render();}
+function showStatus(){status.textContent=`模式：${mode==='baked'?'静态 Lightmap（不叠加实时直接光）':'实时 PBR 对照（近似 Blender 灯具）'}\n静态对象 ${staticMeshes.length} · 动态对象 ${dynamicMeshes.length} · 交互名称 ${aliases.length}\nUV 通道 1（uv1） · 线性 HDR / NoColorSpace · 强度 ${manifest.lightMapIntensity.toFixed(6)}\nUV 绑定错误 ${report.uvErrors.length} · 加载错误 ${errors.length}\n拾取 ${picks} 次${lastPick?' · '+lastPick:''}\n色彩：AgX 一次，曝光 −0.05；网页不含 Blender Medium High Contrast Look。`}
+function applyMode(){
+  for(const mesh of staticMeshes)for(const m of(Array.isArray(mesh.material)?mesh.material:[mesh.material])){
+    m.lightMap=mode==='baked'?lightmap:null;m.lightMapIntensity=manifest.lightMapIntensity;m.needsUpdate=true;
+  }
+  for(const l of lights){l.layers.set(1);if(mode==='realtime')l.layers.enable(0);}
+  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+  showStatus();render();
+}
+function render(){
+  if(!root)return;
+  if(mode==='baked'){
+    // First pass: static PBR with lightmap, no direct lights. Retain depth for dynamic pass.
+    camera.layers.set(0);renderer.autoClear=true;renderer.render(scene,camera);
+    if(document.querySelector('#dynamic').checked){
+      const background=scene.background;scene.background=null;
+      camera.layers.set(1);renderer.autoClear=false;renderer.render(scene,camera);
+      scene.background=background;renderer.autoClear=true;
+    }
+  }else{camera.layers.set(0);if(document.querySelector('#dynamic').checked)camera.layers.enable(1);renderer.autoClear=true;renderer.render(scene,camera);}
+  camera.layers.enable(0);camera.layers.enable(1);
+}
+function addLights(){
+  const ambient=new THREE.AmbientLight(new THREE.Color().setRGB(.8,.8,.8,THREE.LinearSRGBColorSpace),.3);
+  lights.push(ambient);scene.add(ambient);
+  for(const cfg of manifest.blenderLights){
+    const color=new THREE.Color().setRGB(...cfg.color,THREE.LinearSRGBColorSpace);let l;
+    if(cfg.type==='AREA')l=new THREE.RectAreaLight(color,cfg.energy/(cfg.size*cfg.size_y*Math.PI),cfg.size,cfg.size_y);
+    else if(cfg.type==='SPOT')l=new THREE.SpotLight(color,cfg.energy/(4*Math.PI),0,cfg.angle/2,cfg.blend,2);
+    else l=new THREE.PointLight(color,cfg.energy/(4*Math.PI),0,2);
+    l.position.copy(toWeb(cfg.position));const target=l.position.clone().add(toWeb(cfg.direction));
+    if(l.isSpotLight){l.target.position.copy(target);scene.add(l.target);l.castShadow=true;l.shadow.mapSize.set(1024,1024);l.shadow.normalBias=.015;}
+    else if(l.isRectAreaLight)l.lookAt(target);
+    lights.push(l);scene.add(l);
+  }
+}
+try{
+  manifest=await(await fetch('assets/manifest.json')).json();
+  const {RectAreaLightUniformsLib}=await import('three/addons/lights/RectAreaLightUniformsLib.js');RectAreaLightUniformsLib.init();
+  const [gltf,hdr]=await Promise.all([new GLTFLoader().loadAsync('assets/'+manifest.glb),new RGBELoader().setDataType(THREE.HalfFloatType).loadAsync('assets/'+manifest.lightmap)]);
+  root=gltf.scene;lightmap=hdr;lightmap.channel=manifest.uvChannel;lightmap.colorSpace=THREE.NoColorSpace;lightmap.flipY=false;
+  lightmap.minFilter=THREE.LinearFilter;lightmap.magFilter=THREE.LinearFilter;lightmap.generateMipmaps=false;lightmap.needsUpdate=true;
+  root.traverse(o=>{
+    if(o.userData.interaction_alias?.startsWith('I_')||o.userData.interaction_alias==='CAT_main')aliases.push({alias:o.userData.interaction_alias,source:o.userData.source_object,name:o.name});
+    if(!o.isMesh)return;
+    // Multi-material glTF nodes load as Groups; primitive children inherit the
+    // owning object's extras instead of being mistaken for dynamic meshes.
+    let owner=o;while(owner&&typeof owner.userData.is_static_lightmap!=='boolean')owner=owner.parent;
+    const isStatic=owner?.userData.is_static_lightmap===true;
+    if(owner&&owner!==o)o.userData.source_object=owner.userData.source_object;
+    o.layers.set(isStatic?0:1);o.castShadow=true;o.receiveShadow=true;
+    (isStatic?staticMeshes:dynamicMeshes).push(o);
+    for(const m of(Array.isArray(o.material)?o.material:[o.material])){
+      // Occlusion is only the export transport marker for the secondary UV set.
+      const channel=m.aoMap?.channel??manifest.uvChannel;m.aoMap=null;m.aoMapIntensity=1;
+      if(isStatic){
+        if(!o.geometry.getAttribute('uv'+channel))report.uvErrors.push({name:o.name,channel,attributes:Object.keys(o.geometry.attributes)});
+        report.bindings.push({object:o.name,channel,material:m.name,originalEmission:m.emissive?.getHexString(),source:o.userData.source_object});
+      }
+    }
+  });
+  scene.add(root);addLights();reset();
+  report.staticCount=staticMeshes.length;report.dynamicCount=dynamicMeshes.length;report.ready=true;
+  report.getState=()=>({mode,dynamicVisible:document.querySelector('#dynamic').checked,errors,uvErrors:report.uvErrors,picks,lastPick,staticCount:staticMeshes.length,dynamicCount:dynamicMeshes.length,lightMapIntensity:manifest.lightMapIntensity,channel:lightmap.channel,colorSpace:lightmap.colorSpace,flipY:lightmap.flipY});
+  report.testFlipY=v=>{lightmap.flipY=v;lightmap.needsUpdate=true;render();};
+  report.pickAlias=alias=>{
+    const object=root.getObjectByName(alias);if(!object)return {error:'alias not found'};
+    const point=new THREE.Box3().setFromObject(object).getCenter(new THREE.Vector3()).project(camera);
+    const rect=renderer.domElement.getBoundingClientRect();
+    renderer.domElement.dispatchEvent(new MouseEvent('click',{clientX:rect.left+(point.x+1)*rect.width/2,clientY:rect.top+(1-point.y)*rect.height/2,bubbles:true}));
+    return {picks,lastPick};
+  };
+  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;applyMode()});
+  document.querySelector('#dynamic').onchange=()=>{showStatus();render()};document.querySelector('#reset').onclick=()=>{reset();render()};
+  renderer.domElement.addEventListener('click',e=>{
+    if(!document.querySelector('#dynamic').checked)return;
+    const rect=renderer.domElement.getBoundingClientRect(),ray=new THREE.Raycaster();ray.layers.enableAll();
+    ray.setFromCamera(new THREE.Vector2((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1),camera);
+    const hits=ray.intersectObjects(dynamicMeshes,true);if(!hits.length)return;
+    let o=hits[0].object;while(o&&!o.userData.interaction_alias?.startsWith('I_')&&o.userData.interaction_alias!=='CAT_main')o=o.parent;
+    if(o){picks++;lastPick=o.userData.interaction_alias;showStatus();}
+  });
+  controls.addEventListener('change',render);new ResizeObserver(resize).observe(host);resize();applyMode();
+}catch(e){errors.push(String(e.stack||e));status.textContent=errors.join('\n');console.error(e);}
+</script></body></html>

@@ -1,0 +1,1039 @@
+{
+  "output": "D:\\MEELO_交接_1119\\assets-clean\\meelo_unit_rooms_realtime-clean.blend",
+  "removed_image_nodes": [
+    {
+      "material": "F_commute_accent",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_commute_cream",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_commute_dark_keep",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_commute_dot",
+      "image": "LM_commute",
+      "destinations": []
+    },
+    {
+      "material": "F_commute_fabric",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_commute_fabric2",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_commute_Glass_door",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_commute_metal",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_commute_paper",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_commute_route",
+      "image": "LM_commute",
+      "destinations": []
+    },
+    {
+      "material": "F_commute_sign",
+      "image": "LM_commute",
+      "destinations": []
+    },
+    {
+      "material": "F_commute_strip",
+      "image": "LM_commute",
+      "destinations": []
+    },
+    {
+      "material": "F_commute_white",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_commute_yline",
+      "image": "LM_commute",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_accent",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_clay",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_cream",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_dark_keep",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_fabric",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_fabric2",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_leaf2_keep",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_leaf_keep",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_led",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "F_entertainment_marq",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "F_entertainment_neon",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "F_entertainment_planet",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "F_entertainment_pot",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_Screen_arc",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "F_entertainment_Screen_tv",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "F_entertainment_strip",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "F_entertainment_white",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_wood",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_entertainment_woodD",
+      "image": "LM_entertainment",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_accent",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_clay",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_cream",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_dark_keep",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_fabric",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_fabric2",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_Glass_wash",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_leaf2_keep",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_leaf_keep",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_metal",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_paper",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_pot",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_strip",
+      "image": "LM_home",
+      "destinations": []
+    },
+    {
+      "material": "F_home_white",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_wood",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_home_woodD",
+      "image": "LM_home",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_meal_accent",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_bulb",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_clay",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_cream",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_dark_keep",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_fabric",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_fabric2",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_glow",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_leaf2_keep",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_leaf_keep",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_metal",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_pot",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_sinkin",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_strip",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_white",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_wood",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_meal_woodD",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "F_outdoor_accent",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_apple_keep",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_clay",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_cream",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_dark_keep",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_fabric",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_fabric2",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_lanternglow",
+      "image": "LM_outdoor",
+      "destinations": []
+    },
+    {
+      "material": "F_outdoor_leaf2_keep",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_leaf_keep",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_metal",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_pot",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_strip",
+      "image": "LM_outdoor",
+      "destinations": []
+    },
+    {
+      "material": "F_outdoor_white",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_wing",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_wood",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_outdoor_woodD",
+      "image": "LM_outdoor",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_accent",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_cloud",
+      "image": "LM_sleep",
+      "destinations": []
+    },
+    {
+      "material": "F_sleep_cream",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_dark_keep",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_fabric",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_fabric2",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_Glass",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_leaf2_keep",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_leaf_keep",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_metal",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_milk",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_moon",
+      "image": "LM_sleep",
+      "destinations": []
+    },
+    {
+      "material": "F_sleep_paper",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_pot",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_starled",
+      "image": "LM_sleep",
+      "destinations": []
+    },
+    {
+      "material": "F_sleep_strip",
+      "image": "LM_sleep",
+      "destinations": []
+    },
+    {
+      "material": "F_sleep_white",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_wood",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_sleep_woodD",
+      "image": "LM_sleep",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_accent",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_bulbs",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "F_social_cream",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_dark_keep",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_discoball",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_djface",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_fabric",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_fabric2",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_leaf2_keep",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_leaf_keep",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_led0",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "F_social_led1",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "F_social_led2",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "F_social_lemon",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_metal",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_neon",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "F_social_pot",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_strip",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "F_social_white",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_wood",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_social_woodD",
+      "image": "LM_social",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_accent",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_bulb",
+      "image": "LM_studyWork",
+      "destinations": []
+    },
+    {
+      "material": "F_studyWork_clay",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_cream",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_cursor",
+      "image": "LM_studyWork",
+      "destinations": []
+    },
+    {
+      "material": "F_studyWork_dark_keep",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_fabric",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_fabric2",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_leaf2_keep",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_leaf_keep",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_metal",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_paper",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_pot",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_Screen",
+      "image": "LM_studyWork",
+      "destinations": []
+    },
+    {
+      "material": "F_studyWork_strip",
+      "image": "LM_studyWork",
+      "destinations": []
+    },
+    {
+      "material": "F_studyWork_white",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_wood",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "F_studyWork_woodD",
+      "image": "LM_studyWork",
+      "destinations": [
+        "原理化 BSDF:Emission Color"
+      ]
+    },
+    {
+      "material": "U_commute_ceil",
+      "image": "LM_commute",
+      "destinations": []
+    },
+    {
+      "material": "U_commute_floor",
+      "image": "LM_commute",
+      "destinations": []
+    },
+    {
+      "material": "U_commute_wall",
+      "image": "LM_commute",
+      "destinations": []
+    },
+    {
+      "material": "U_entertainment_ceil",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "U_entertainment_floor",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "U_entertainment_wall",
+      "image": "LM_entertainment",
+      "destinations": []
+    },
+    {
+      "material": "U_Frame",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "U_home_ceil",
+      "image": "LM_home",
+      "destinations": []
+    },
+    {
+      "material": "U_home_floor",
+      "image": "LM_home",
+      "destinations": []
+    },
+    {
+      "material": "U_home_wall",
+      "image": "LM_home",
+      "destinations": []
+    },
+    {
+      "material": "U_meal_ceil",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "U_meal_floor",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "U_meal_P1",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "U_meal_P2",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "U_meal_wall",
+      "image": "LM_meal",
+      "destinations": []
+    },
+    {
+      "material": "U_outdoor_ceil",
+      "image": "LM_outdoor",
+      "destinations": []
+    },
+    {
+      "material": "U_outdoor_floor",
+      "image": "LM_outdoor",
+      "destinations": []
+    },
+    {
+      "material": "U_outdoor_wall",
+      "image": "LM_outdoor",
+      "destinations": []
+    },
+    {
+      "material": "U_sleep_ceil",
+      "image": "LM_sleep",
+      "destinations": []
+    },
+    {
+      "material": "U_sleep_floor",
+      "image": "LM_sleep",
+      "destinations": []
+    },
+    {
+      "material": "U_sleep_wall",
+      "image": "LM_sleep",
+      "destinations": []
+    },
+    {
+      "material": "U_social_ceil",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "U_social_floor",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "U_social_wall",
+      "image": "LM_social",
+      "destinations": []
+    },
+    {
+      "material": "U_studyWork_ceil",
+      "image": "LM_studyWork",
+      "destinations": []
+    },
+    {
+      "material": "U_studyWork_floor",
+      "image": "LM_studyWork",
+      "destinations": []
+    },
+    {
+      "material": "U_studyWork_wall",
+      "image": "LM_studyWork",
+      "destinations": []
+    }
+  ],
+  "uv_names_preserved": true,
+  "objects": 3578
+}

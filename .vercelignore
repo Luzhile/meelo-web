@@ -1,0 +1,9 @@
+node_modules/
+dist/
+assets/
+docs/
+archive/
+runtime/
+src/
+*.blend
+*.zip

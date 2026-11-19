@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEELO 用餐房 AO 严格对比</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e7e7e7;color:#343039;font:14px system-ui,sans-serif}header{position:sticky;top:0;z-index:20;min-height:66px;padding:14px 20px;background:#fffaf1;border-bottom:1px solid #d5d0c6;display:flex;gap:12px;align-items:center;flex-wrap:wrap}h1{font-size:17px;margin:0 8px 0 0}button{border:1px solid #a99b86;border-radius:6px;padding:8px 12px;background:white;color:#343039;cursor:pointer}button[aria-pressed=true]{background:#343039;color:white}button:disabled{opacity:.5;cursor:wait}#mode-state{padding:7px 10px;border-radius:6px;background:#f4dfce;font-size:12px;font-weight:600}main{max-width:1100px;margin:16px auto;padding:0 16px}#viewport{width:100%;aspect-ratio:3/2;background:#e7e7e7}canvas{width:100%;height:100%;display:block}.settings{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:14px 0}label{display:flex;gap:8px;align-items:center}#intensity{width:190px;accent-color:#d18369}output{min-width:2.5em;font-variant-numeric:tabular-nums}#status{white-space:pre-wrap;font:12px/1.6 ui-monospace,monospace;padding:12px;background:#fffaf1;border:1px solid #ddd4c6;border-radius:8px}p{line-height:1.6}nav{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0}a{color:#755335}
+</style>
+<script type="importmap">{"imports":{"three":"../../vendor/package/build/three.module.js","three/addons/":"../../vendor/package/examples/jsm/"}}</script></head>
+<body><header><h1>用餐房 · AO 独立验证</h1><button data-mode="pbr" aria-pressed="false">A · 原始实时 PBR</button><button data-mode="ao" aria-pressed="true">B · 实时 PBR＋AO</button><span id="mode-state" role="status" aria-live="polite">模型加载中 · 可先选择模式</span><button id="reset" disabled>参考机位</button></header>
+<main><div id="viewport"></div><div class="settings"><label>AO 强度 <input id="intensity" type="range" min="0" max="1" step=".01" value=".5"><output id="amount">0.50</output></label><label><input id="dynamic" type="checkbox" checked>显示小猫与可动物件</label></div>
+<p>两种模式共用同一套实时灯光、材质、模型和相机，只改变 AO。滑块为 0 时应与 A 模式一致。AO 只影响材质的间接照明，不会额外调整曝光、环境光或基础颜色。</p>
+<nav><a href="assets/meal-ao.png" target="_blank">AO 贴图</a><a href="renders/meal-pbr.png" target="_blank">同机位：原 PBR</a><a href="renders/meal-pbr-ao-050.png" target="_blank">同机位：AO 0.5</a><a href="assets/manifest.json" target="_blank">加载参数</a><a href="REPORT.md" target="_blank">测试报告</a><a href="../" target="_blank">归档：学习房 Diffuse 实验</a></nav><div id="status">正在加载用餐房 AO 测试…</div></main>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {RectAreaLightUniformsLib} from 'three/addons/lights/RectAreaLightUniformsLib.js';
+RectAreaLightUniformsLib.init();
+const host=document.querySelector('#viewport'),status=document.querySelector('#status'),slider=document.querySelector('#intensity');
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(1);
+renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.AgXToneMapping;renderer.toneMappingExposure=2**(-.05);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;host.appendChild(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#e7e7e7');
+const camera=new THREE.OrthographicCamera(-4.75,4.75,9.5/3,-9.5/3,.05,100);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=false;
+let mode='ao',amount=.5,root,manifest;const staticMeshes=[],dynamicMeshes=[],aoMaterials=new Map(),lights=[];
+let picks=0,lastPick=null;const errors=[],uvErrors=[],bindings=[],aliases=[];
+const report={ready:false,errors,uvErrors,bindings,aliases};window.__mealAOValidation=report;
+const toWeb=a=>new THREE.Vector3(a[0],a[2],-a[1]);
+function render(){if(root)renderer.render(scene,camera);}
+function reset(){camera.position.fromArray(manifest.camera.position_web);controls.target.fromArray(manifest.camera.target_web);camera.lookAt(controls.target);controls.update();render();}
+function resize(){const w=Math.round(host.clientWidth);renderer.setSize(w,Math.round(w/1.5),false);render();}
+function addLights(){
+  const world=manifest.worldApproximation;
+  const ambient=new THREE.AmbientLight(new THREE.Color().setRGB(...world.ambientColorLinear,THREE.LinearSRGBColorSpace),world.ambientIntensity);
+  ambient.name='fixed-reference-ambient';lights.push(ambient);scene.add(ambient);
+  for(const cfg of manifest.blenderLights){
+    const color=new THREE.Color().setRGB(...cfg.color,THREE.LinearSRGBColorSpace);let l;
+    if(cfg.type==='AREA')l=new THREE.RectAreaLight(color,cfg.energy/(cfg.size*cfg.size_y*Math.PI),cfg.size,cfg.size_y);
+    else if(cfg.type==='SPOT')l=new THREE.SpotLight(color,cfg.energy/(4*Math.PI),0,cfg.angle/2,cfg.blend,2);
+    else l=new THREE.PointLight(color,cfg.energy/(4*Math.PI),0,2);
+    l.name=cfg.name;l.position.copy(toWeb(cfg.position));const target=l.position.clone().add(toWeb(cfg.direction));
+    if(l.isSpotLight){l.target.position.copy(target);scene.add(l.target);}
+    else if(l.isRectAreaLight)l.lookAt(target);
+    if(l.shadow){l.castShadow=cfg.castShadow??true;l.shadow.mapSize.set(512,512);l.shadow.camera.near=.05;l.shadow.camera.far=20;l.shadow.bias=-.0003;l.shadow.normalBias=.02;l.shadow.radius=3;}
+    lights.push(l);scene.add(l);
+  }
+}
+function invariantSnapshot(){
+  root.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+  const meshes=[],materials=new Map();
+  root.traverse(o=>{
+    if(!o.isMesh)return;
+    meshes.push([o.uuid,o.name,o.parent?.uuid,o.visible,...o.matrixWorld.elements]);
+    for(const m of(Array.isArray(o.material)?o.material:[o.material]))if(!materials.has(m.uuid))materials.set(m.uuid,{uuid:m.uuid,name:m.name,color:m.color?.toArray(),emissive:m.emissive?.toArray(),emissiveIntensity:m.emissiveIntensity,roughness:m.roughness,metalness:m.metalness,opacity:m.opacity,transparent:m.transparent,side:m.side,map:m.map?.uuid||null,normalMap:m.normalMap?.uuid||null,roughnessMap:m.roughnessMap?.uuid||null,metalnessMap:m.metalnessMap?.uuid||null,lightMap:m.lightMap?.uuid||null});
+  });
+  return JSON.stringify({camera:{position:camera.position.toArray(),matrix:camera.matrixWorld.toArray(),projection:camera.projectionMatrix.toArray(),target:controls.target.toArray()},toneMapping:renderer.toneMapping,exposure:renderer.toneMappingExposure,colorSpace:renderer.outputColorSpace,background:scene.background.getHex(),lights:lights.map(l=>({uuid:l.uuid,type:l.type,name:l.name,color:l.color.toArray(),intensity:l.intensity,position:l.position.toArray(),rotation:l.quaternion.toArray(),width:l.width,height:l.height,angle:l.angle,penumbra:l.penumbra,castShadow:l.castShadow})),meshes,materials:[...materials.values()]});
+}
+function info(){
+  const effective=mode==='ao'?amount:0;
+  document.querySelector('#mode-state').textContent=(mode==='ao'?`B · AO 已开启 ${amount.toFixed(2)}`:'A · AO 已关闭')+(report.ready?'':' · 模型加载中');
+  document.querySelector('#mode-state').style.background=mode==='ao'?'#f4dfce':'#dce7ef';
+  document.querySelector('#amount').textContent=amount.toFixed(2);
+  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+  if(!report.ready){status.textContent=errors.length?errors.join('\n'):'模型加载中，已记录所选模式；加载完成后自动应用。';return;}
+  status.textContent=`模式：${mode==='ao'?'B · 实时 PBR＋AO':'A · 原始实时 PBR'} · 有效 AO 强度 ${effective.toFixed(2)}\n复用 UV_Lightmap / uv1（通道 1） · AO 为 NoColorSpace 数据 · 不使用 Lightmap\n静态 primitive ${staticMeshes.length} · 动态 primitive ${dynamicMeshes.length} · 灯光 ${lights.length} 盏（A/B 完全相同）\n采样 ${manifest.aoSamples} · 距离 ${manifest.aoDistance}m · 扩边 ${manifest.aoMargin}px\nUV 错误 ${uvErrors.length} · 加载错误 ${errors.length}${lastPick?' · 最近拾取 '+lastPick:''}`;
+  document.querySelector('#amount').textContent=amount.toFixed(2);
+  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+}
+function apply(){
+  for(const [m,tex] of aoMaterials){const wanted=mode==='ao'?tex:null;if(m.aoMap!==wanted){m.aoMap=wanted;m.needsUpdate=true;}m.aoMapIntensity=mode==='ao'?amount:0;}
+  info();render();
+}
+// Bind before the model fetch: a click during loading is queued and acknowledged.
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;apply();});
+slider.oninput=()=>{mode='ao';amount=THREE.MathUtils.clamp(Number(slider.value),0,1);apply();};
+document.querySelector('#reset').onclick=()=>{if(report.ready)reset();};
+try{
+  manifest=await(await fetch('assets/manifest.json')).json();
+  if(manifest.experiment!=='AO_ONLY'||manifest.room!=='meal')throw Error('Not a meal AO-only manifest');
+  const gltf=await new GLTFLoader().loadAsync('assets/'+manifest.glb);root=gltf.scene;
+  root.traverse(o=>{
+    if(o.userData.interaction_alias?.startsWith('I_')||o.userData.interaction_alias==='CAT_main')aliases.push({alias:o.userData.interaction_alias,name:o.name,source:o.userData.source_object});
+    if(!o.isMesh)return;
+    let owner=o;while(owner&&typeof owner.userData.is_static_ao!=='boolean')owner=owner.parent;
+    const isStatic=owner?.userData.is_static_ao===true;
+    if(owner&&owner!==o)o.userData.source_object=owner.userData.source_object;
+    (isStatic?staticMeshes:dynamicMeshes).push(o);o.castShadow=true;o.receiveShadow=true;
+    for(const m of(Array.isArray(o.material)?o.material:[o.material])){
+      if(m.lightMap)throw Error('Unexpected Lightmap on '+m.name);
+      if(isStatic){
+        const tex=m.aoMap;
+        if(!tex){uvErrors.push({name:o.name,error:'Missing AO texture'});continue;}
+        const channel=tex.channel;
+        tex.colorSpace=THREE.NoColorSpace;tex.flipY=false;tex.needsUpdate=true;
+        if(channel!==manifest.uvChannel||!o.geometry.getAttribute(channel===0?'uv':'uv'+channel))uvErrors.push({name:o.name,channel,attributes:Object.keys(o.geometry.attributes)});
+        aoMaterials.set(m,tex);bindings.push({name:o.name,source:o.userData.source_object,material:m.name,channel,colorSpace:tex.colorSpace,flipY:tex.flipY});
+      }else if(m.aoMap){uvErrors.push({name:o.name,error:'AO attached to dynamic object'});}
+    }
+  });
+  scene.add(root);addLights();reset();resize();report.ready=true;apply();document.querySelector('#reset').disabled=false;
+  report.invariantSnapshot=invariantSnapshot;
+  report.getState=()=>({mode,slider:amount,effectiveAO:mode==='ao'?amount:0,staticCount:staticMeshes.length,dynamicCount:dynamicMeshes.length,aoMaterialCount:aoMaterials.size,lights:lights.length,lightMapCount:[...aoMaterials.keys()].filter(m=>m.lightMap).length,uvErrors,errors,dynamicVisible:document.querySelector('#dynamic').checked,picks,lastPick,exposure:renderer.toneMappingExposure});
+  report.setMode=v=>{if(!['pbr','ao'].includes(v))throw Error('Invalid mode');mode=v;apply();};
+  report.setIntensity=v=>{amount=THREE.MathUtils.clamp(Number(v),0,1);slider.value=amount;apply();};
+  report.capture=()=>{render();return renderer.domElement.toDataURL('image/png');};
+  report.referenceResolution=()=>{host.style.width='900px';host.style.height='600px';renderer.setSize(900,600,false);render();};
+  report.runABChecks=()=>{
+    const savedMode=mode,savedAmount=amount,baseline=invariantSnapshot();
+    const pixels=()=>{render();const gl=renderer.getContext(),a=new Uint8Array(renderer.domElement.width*renderer.domElement.height*4);gl.readPixels(0,0,renderer.domElement.width,renderer.domElement.height,gl.RGBA,gl.UNSIGNED_BYTE,a);return a;};
+    mode='pbr';apply();const a=pixels(),invariantA=invariantSnapshot();
+    mode='ao';amount=0;apply();const zero=pixels(),invariantZero=invariantSnapshot();
+    amount=.5;apply();const half=pixels(),invariantHalf=invariantSnapshot();
+    amount=1;apply();const full=pixels(),invariantFull=invariantSnapshot();
+    const compare=b=>{let differing=0,max=0,absolute=0,meanA=0,meanB=0;for(let i=0;i<a.length;i+=4){let changed=false;for(let k=0;k<3;k++){const d=Math.abs(a[i+k]-b[i+k]);absolute+=d;max=Math.max(max,d);meanA+=a[i+k];meanB+=b[i+k];if(d)changed=true;}if(changed)differing++;}const n=a.length/4;return {differingPixels:differing,totalPixels:n,maxChannelDifference:max,meanAbsoluteChannelDifference:absolute/(n*3),meanRGBBefore:meanA/(n*3),meanRGBAfter:meanB/(n*3),brightnessChangePercent:100*(meanB-meanA)/meanA};};
+    const unchanged=baseline===invariantA&&baseline===invariantZero&&baseline===invariantHalf&&baseline===invariantFull;
+    const result={abOnlyAOChanges:unchanged,aVsAOZero:compare(zero),aVsAOHalf:compare(half),aVsAOFull:compare(full),width:renderer.domElement.width,height:renderer.domElement.height,cmfCameraLightsBackgroundAndModelsUnchanged:unchanged};
+    mode=savedMode;amount=savedAmount;slider.value=amount;apply();return result;
+  };
+  report.pickAlias=alias=>{const o=root.getObjectByName(alias);if(!o)return {error:'alias not found'};const p=new THREE.Box3().setFromObject(o).getCenter(new THREE.Vector3()).project(camera),r=renderer.domElement.getBoundingClientRect();renderer.domElement.dispatchEvent(new MouseEvent('click',{clientX:r.left+(p.x+1)*r.width/2,clientY:r.top+(1-p.y)*r.height/2,bubbles:true}));return {picks,lastPick};};
+  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>report.setMode(b.dataset.mode));
+  slider.oninput=()=>{mode='ao';report.setIntensity(slider.value);};
+  document.querySelector('#reset').onclick=reset;
+  document.querySelector('#dynamic').onchange=e=>{dynamicMeshes.forEach(o=>o.visible=e.target.checked);render();};
+  renderer.domElement.addEventListener('click',e=>{
+    const r=renderer.domElement.getBoundingClientRect(),ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1),camera);
+    const h=ray.intersectObjects(dynamicMeshes.filter(o=>o.visible),true)[0];if(!h)return;
+    let o=h.object;while(o&&!o.userData.interaction_alias?.startsWith('I_')&&o.userData.interaction_alias!=='CAT_main')o=o.parent;
+    if(o){picks++;lastPick=o.userData.interaction_alias;info();}
+  });
+  controls.addEventListener('change',render);new ResizeObserver(resize).observe(host);resize();
+}catch(e){errors.push(String(e.stack||e));status.textContent=errors.join('\n');console.error(e);}
+</script></body></html>

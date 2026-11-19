@@ -39,4 +39,3 @@ npm run preview:web
 请先读 `docs/HANDOFF.md`。网页端无法运行系统托盘、桌面窗口扫描、鼠标穿透和独立桌面猫；这些在另一份 Electron 包中。
 
 历史模型备份已移至 `archive/model-backups/`，不会进入网页构建或 Vercel 部署。当前运行模型仅为 `app/models/` 根目录的八份 `.txt` 与 `rooms.json`。Blender 源文件单个均小于 Git 单文件 100 MiB 限制，可以由 Git 客户端提交；GitHub 网页上传仍受单文件 25 MB 限制。
-

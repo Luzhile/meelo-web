@@ -1,0 +1,11 @@
+{
+  "name":"meelo-web-handoff",
+  "version":"1.0.0",
+  "private":true,
+  "engines":{"node":">=20"},
+  "scripts":{
+    "dev":"node tools/serve-static.cjs app 5173",
+    "build:web":"node tools/build-web.cjs",
+    "preview:web":"node tools/serve-static.cjs dist 4173"
+  }
+}

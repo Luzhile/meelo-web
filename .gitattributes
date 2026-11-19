@@ -1,0 +1,6 @@
+# Preserve the exact source/asset bytes recorded in SHA256SUMS.json on all systems.
+* -text
+*.blend binary
+*.png binary
+*.jpg binary
+*.woff2 binary
