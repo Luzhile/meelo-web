@@ -17,7 +17,7 @@ jobs:
           node <<'JS'
           const fs=require('fs'),crypto=require('crypto'),path=require('path');
           const m=JSON.parse(fs.readFileSync('__handoff_bundle/READY.json','utf8'));
-          const parts=Array.from({length:m.parts},(_,i)=>Buffer.from(fs.readFileSync('__handoff_bundle/part-'+String(i).padStart(4,'0')+'.b64','utf8'),'base64'));
+          const parts=Array.from({length:m.parts},(_,i)=>fs.readFileSync('__handoff_bundle/part-'+String(i).padStart(4,'0')+'.bin'));
           const b=Buffer.concat(parts);
           if(crypto.createHash('sha256').update(b).digest('hex')!==m.sha256)throw Error('Bundle checksum mismatch');
           fs.writeFileSync(path.join(process.env.RUNNER_TEMP,'meelo-web.bundle'),b);
